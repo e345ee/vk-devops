@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        run: docker build -t cat-monitor-app .
+
+      - name: Run container
+        run: |
+          docker run -d --rm -p 8080:8080 --name cat-app cat-monitor-app
+          sleep 5
+          curl -f http://localhost:8080/health
+
+      - name: Show logs
+        if: always()
+        run: docker logs cat-app || true

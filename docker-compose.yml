@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  cat-app:
+    build: .  #Собрать Docker-образ из Dockerfile в текущей директории
+    container_name: cat-app
+    ports:
+      - "8080:8080" #Пробрасываем порт
+    environment:
+      APP_PORT: 8080
+      CHECK_INTERVAL_SEC: 5
+      LOG_FILE: "/var/log/hello-monitor.log"
+    restart: always # Перезапускать контейнер при падении приложения или мониторинга
